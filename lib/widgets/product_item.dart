@@ -23,7 +23,7 @@ class ProductItem extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pushNamed(
               ProductDetailScreen.routeName,
-              arguments: id,
+              arguments: product.id,
             );
           },
           child: Image.network(
@@ -33,14 +33,16 @@ class ProductItem extends StatelessWidget {
         ),
         footer: GridTileBar(
           backgroundColor: Colors.black54,
-          leading: IconButton(
-            icon: Icon(
-              product.isFavorite ? Icons.favorite : Icons.favorite_border,
+          leading: Consumer<Product>(
+            builder: (ctx, product, _) => IconButton(
+              icon: Icon(
+                product.isFavorite ? Icons.favorite : Icons.favorite_border,
+              ),
+              onPressed: () {
+                product.toggleFavoriteStatus();
+              },
+              color: Theme.of(context).accentColor,
             ),
-            onPressed: () {
-              product.toggleFavoriteStatus();
-            },
-            color: Theme.of(context).accentColor,
           ),
           title: Text(
             product.title,
