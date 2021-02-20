@@ -39,6 +39,12 @@ class _EditeProductScreenState extends State<EditeProductScreen> {
 
   void _updateImageUrl() {
     if (!_imageUrlFocusNode.hasFocus) {
+      if (_imageUrlController.text.isEmpty ||
+          !_imageUrlController.text.startsWith('http') &&
+              !_imageUrlController.text.startsWith('https')) {
+        return;
+      }
+
       setState(() {});
     }
   }
@@ -101,6 +107,18 @@ class _EditeProductScreenState extends State<EditeProductScreen> {
                   onFieldSubmitted: (_) {
                     FocusScope.of(context).requestFocus(_discriptionFocusNode);
                   },
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter a price';
+                    }
+                    if (double.tryParse(value) == null) {
+                      return 'Please enter a valid number';
+                    }
+                    if (double.parse(value) <= 0) {
+                      return 'Please enter a number greater than zero';
+                    }
+                    return null;
+                  },
                   onSaved: (value) {
                     _editedProduct = Product(
                       title: _editedProduct.title,
@@ -117,6 +135,15 @@ class _EditeProductScreenState extends State<EditeProductScreen> {
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.multiline,
                   focusNode: _discriptionFocusNode,
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please  enter a discription';
+                    }
+                    if (value.length < 10) {
+                      return 'Please enter discription ten words at least .';
+                    }
+                    return null;
+                  },
                   onSaved: (value) {
                     _editedProduct = Product(
                       title: _editedProduct.title,
@@ -162,6 +189,16 @@ class _EditeProductScreenState extends State<EditeProductScreen> {
                         controller: _imageUrlController,
                         focusNode: _imageUrlFocusNode,
                         onFieldSubmitted: (_) => _saveForm(),
+                        validator: (value) {
+                          if (value.isEmpty) {
+                            return 'Please upload a image';
+                          }
+                          if (!value.startsWith('http') &&
+                              !value.startsWith('https')) {
+                            return 'Please enter a valid url';
+                          }
+                          return null;
+                        },
                         onSaved: (value) {
                           _editedProduct = Product(
                             title: _editedProduct.title,
