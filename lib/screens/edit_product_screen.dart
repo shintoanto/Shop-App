@@ -8,6 +8,8 @@ class EditeProductScreen extends StatefulWidget {
 }
 
 class _EditeProductScreenState extends State<EditeProductScreen> {
+  final _priceFocusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +20,21 @@ class _EditeProductScreenState extends State<EditeProductScreen> {
         padding: const EdgeInsets.all(8.0),
         child: Form(
             child: ListView(
-          children: <Widget>[TextFormField()],
+          children: <Widget>[
+            TextFormField(
+              decoration: InputDecoration(labelText: 'Title'),
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (_) {
+                FocusScope.of(context).requestFocus(_priceFocusNode);
+              },
+            ),
+            TextFormField(
+              decoration: InputDecoration(labelText: 'Price'),
+              textInputAction: TextInputAction.next,
+              keyboardType: TextInputType.number,
+              focusNode: _priceFocusNode,
+            ),
+          ],
         )),
       ),
     );
