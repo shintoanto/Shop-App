@@ -31,6 +31,7 @@ class _EditeProductScreenState extends State<EditeProductScreen> {
   };
 
   var _isInit = true;
+  var _isLoading = false;
 
   @override
   void initState() {
@@ -86,14 +87,26 @@ class _EditeProductScreenState extends State<EditeProductScreen> {
       return;
     }
     _form.currentState.save();
+    setState(() {
+      _isLoading = true;
+    });
+
     if (_editedProduct.id != null) {
       Provider.of<Products>(context, listen: false)
-          .updateProduct(_editedProduct, _editedProduct);
+          .updateProducts(_editedProduct.id, _editedProduct);
+      setState(() {
+        _isLoading = false;
+      });
     } else {
-      Provider.of<Products>(context, listen: false).addProduct(_editedProduct);
-    }
+      Provider.of<Products>(context, listen: false)
+          .addProduct(_editedProduct)
+          .then((_) {setState(() {
+      _isLoading = false;
+    });
+             Navigator.of(context).pop();
+    });
 
-    Navigator.of(context).pop();
+    // Navigator.of(context).pop();
   }
 
   @override
@@ -110,7 +123,7 @@ class _EditeProductScreenState extends State<EditeProductScreen> {
           ),
         ],
       ),
-      body: Padding(
+      body:_isLoading ?Center(child: CircularProgressIndicator(),) :Padding(
         padding: const EdgeInsets.all(8.0),
         child: Form(
             key: _form,
